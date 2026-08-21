@@ -1,0 +1,6 @@
+{
+  "name": "Namro Smart Patro",
+  "description": "Proprietary Nepali Calendar, Panchang calculation engine, festivals, holidays, astronomical calculations, news, and admin calculation test laboratory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

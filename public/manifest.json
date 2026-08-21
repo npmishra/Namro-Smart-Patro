@@ -1,0 +1,18 @@
+{
+  "name": "Namro Smart Patro - नाम्रो स्मार्ट पात्रो",
+  "short_name": "Namro Patro",
+  "description": "Proprietary modern Nepali Calendar and Panchang Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
