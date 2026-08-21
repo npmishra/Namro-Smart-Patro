@@ -32,6 +32,7 @@ import { MuhuratView } from './components/MuhuratView';
 import { PersonalEventsView } from './components/PersonalEventsView';
 import { AdminTestLabModal } from './components/AdminTestLabModal';
 import { GlobalSearchModal } from './components/GlobalSearchModal';
+import { LocationSelectorModal } from './components/LocationSelectorModal';
 import { BottomNavigation } from './components/BottomNavigation';
 import { RashifalView } from './components/RashifalView';
 import { DateConverterView } from './components/DateConverterView';
@@ -40,6 +41,8 @@ import { RadioPlayerView } from './components/RadioPlayerView';
 import { PrintableWallCalendar } from './components/PrintableWallCalendar';
 import { FestivalCountdownWidget } from './components/FestivalCountdownWidget';
 import { DayDetailModal } from './components/DayDetailModal';
+
+const SAVED_LOCATION_KEY = 'namro_smart_patro_location_id';
 
 export function App() {
   // 1. Current Date State
@@ -57,7 +60,25 @@ export function App() {
 
   // 2. Engine Settings State
   const [calculationMethod, setCalculationMethod] = useState<CalculationMethodType>('drik');
-  const [currentLocation, setCurrentLocation] = useState<LocationData>(DEFAULT_LOCATION);
+  const [currentLocation, setCurrentLocation] = useState<LocationData>(() => {
+    try {
+      const savedId = localStorage.getItem(SAVED_LOCATION_KEY);
+      if (savedId) {
+        return getLocationById(savedId);
+      }
+    } catch (e) {
+      // localStorage not accessible
+    }
+    return DEFAULT_LOCATION;
+  });
+
+  const handleLocationChange = (loc: LocationData) => {
+    setCurrentLocation(loc);
+    try {
+      localStorage.setItem(SAVED_LOCATION_KEY, loc.id);
+    } catch (e) {}
+  };
+
   const [activeTab, setActiveTab] = useState<string>('calendar');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -67,6 +88,7 @@ export function App() {
   const [showYearView, setShowYearView] = useState<boolean>(false);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
   const [showAdminLab, setShowAdminLab] = useState<boolean>(false);
+  const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
   const [showDayDetailModal, setShowDayDetailModal] = useState<boolean>(false);
 
   // 4. Personal Events State
@@ -145,7 +167,8 @@ export function App() {
         currentMethod={calculationMethod}
         onMethodChange={setCalculationMethod}
         currentLocation={currentLocation}
-        onLocationChange={setCurrentLocation}
+        onLocationChange={handleLocationChange}
+        onOpenLocationModal={() => setShowLocationModal(true)}
         onOpenSearch={() => setShowSearchModal(true)}
         onOpenAdminLab={() => setShowAdminLab(true)}
         isDarkMode={isDarkMode}
@@ -184,6 +207,7 @@ export function App() {
                   setActiveMonth(m);
                   setShowYearView(false);
                 }}
+                onSelectDate={handleSelectDate}
                 onClose={() => setShowYearView(false)}
               />
             ) : (
@@ -284,6 +308,13 @@ export function App() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
             <button
+              onClick={() => setShowLocationModal(true)}
+              className="hover:text-red-600 dark:hover:text-rose-400 font-bold"
+            >
+              📍 स्थान परिवर्तन ({currentLocation.nameNepali.split(' ')[0]})
+            </button>
+            <span>•</span>
+            <button
               onClick={() => setShowAdminLab(true)}
               className="hover:text-red-600 dark:hover:text-rose-400 font-bold"
             >
@@ -325,6 +356,15 @@ export function App() {
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* 5. Modals */}
+      {/* Location Selector Modal covering all 77 districts of Nepal */}
+      {showLocationModal && (
+        <LocationSelectorModal
+          currentLocation={currentLocation}
+          onSelectLocation={handleLocationChange}
+          onClose={() => setShowLocationModal(false)}
+        />
+      )}
+
       {/* Day Detail Modal when clicking ANY date in the calendar */}
       {showDayDetailModal && (
         <DayDetailModal
