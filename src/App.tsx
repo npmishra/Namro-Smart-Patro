@@ -5,6 +5,7 @@ import {
   CalculationMethodType,
   LocationData,
   PersonalEvent,
+  NewsArticle,
 } from './types';
 import {
   adToBs,
@@ -41,6 +42,9 @@ import { RadioPlayerView } from './components/RadioPlayerView';
 import { PrintableWallCalendar } from './components/PrintableWallCalendar';
 import { FestivalCountdownWidget } from './components/FestivalCountdownWidget';
 import { DayDetailModal } from './components/DayDetailModal';
+import { BreakingNewsTicker } from './components/BreakingNewsTicker';
+import { HomeNewsWidget } from './components/HomeNewsWidget';
+import { NewsReaderModal } from './components/NewsReaderModal';
 
 const SAVED_LOCATION_KEY = 'namro_smart_patro_location_id';
 
@@ -90,6 +94,7 @@ export function App() {
   const [showAdminLab, setShowAdminLab] = useState<boolean>(false);
   const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
   const [showDayDetailModal, setShowDayDetailModal] = useState<boolean>(false);
+  const [selectedReaderArticle, setSelectedReaderArticle] = useState<NewsArticle | null>(null);
 
   // 4. Personal Events State
   const [personalEvents, setPersonalEvents] = useState<PersonalEvent[]>(() => getStoredEvents());
@@ -179,6 +184,12 @@ export function App() {
 
       {/* 2. Main Body Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+        {/* Live Breaking News Ticker (Automatic Updates) */}
+        <BreakingNewsTicker
+          onSelectArticle={(art) => setSelectedReaderArticle(art)}
+          onOpenAllNews={() => setActiveTab('news')}
+        />
+
         {/* Prominent Date Hero Card */}
         <DateHeroCard
           panchang={selectedPanchang}
@@ -248,6 +259,14 @@ export function App() {
                 </div>
               </div>
             )}
+
+            {/* Portal Homepage Live News Updates Section */}
+            {!showYearView && (
+              <HomeNewsWidget
+                onOpenAllNews={() => setActiveTab('news')}
+                onSelectArticle={(art) => setSelectedReaderArticle(art)}
+              />
+            )}
           </div>
         )}
 
@@ -302,7 +321,7 @@ export function App() {
               नाम्रो स्मार्ट पात्रो (Namro Smart Patro)
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              स्वतन्त्र तथा पूर्ण स्वत्वाधिकारयुक्त नेपाली पात्रो तथा पञ्चाङ्ग गणना प्रणाली
+              स्वतन्त्र तथा पूर्ण स्वत्वाधिकारयुक्त नेपाली पात्रो, पञ्चाङ्ग तथा लाइभ समाचार पोर्टल
             </p>
           </div>
 
@@ -312,6 +331,14 @@ export function App() {
               className="hover:text-red-600 dark:hover:text-rose-400 font-bold"
             >
               📍 स्थान परिवर्तन ({currentLocation.nameNepali.split(' ')[0]})
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('news')}
+              className="hover:text-red-600 dark:hover:text-rose-400 font-bold flex items-center gap-1"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              ताजा समाचार (Live News)
             </button>
             <span>•</span>
             <button
@@ -356,6 +383,14 @@ export function App() {
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* 5. Modals */}
+      {/* Quick Article Reader Modal */}
+      {selectedReaderArticle && (
+        <NewsReaderModal
+          article={selectedReaderArticle}
+          onClose={() => setSelectedReaderArticle(null)}
+        />
+      )}
+
       {/* Location Selector Modal covering all 77 districts of Nepal */}
       {showLocationModal && (
         <LocationSelectorModal

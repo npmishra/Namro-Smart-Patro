@@ -80,6 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
   const primaryNavItems = [
     { id: 'calendar', label: 'पात्रो' },
     { id: 'panchang', label: 'पञ्चाङ्ग' },
+    { id: 'news', label: 'ताजा समाचार', isLive: true },
     { id: 'rashifal', label: 'राशिफल' },
     { id: 'converter', label: 'मिति रूपान्तरण' },
     { id: 'forex', label: 'विदेशी मुद्रा' },
@@ -89,7 +90,6 @@ export const Header: React.FC<HeaderProps> = ({
   const secondaryNavItems = [
     { id: 'radio', label: 'प्रत्यक्ष रेडियो', icon: <Radio className="w-4 h-4 text-purple-500" /> },
     { id: 'muhurat', label: 'शुभ साइत', icon: <Heart className="w-4 h-4 text-rose-500" /> },
-    { id: 'news', label: 'ताजा समाचार', icon: <Newspaper className="w-4 h-4 text-blue-500" /> },
     { id: 'events', label: 'मेरा घटनाहरू', icon: <CalendarCheck className="w-4 h-4 text-emerald-500" /> },
     { id: 'wall_calendar', label: 'भित्ते पात्रो प्रिन्ट', icon: <Printer className="w-4 h-4 text-red-500" /> },
   ];
@@ -134,13 +134,19 @@ export const Header: React.FC<HeaderProps> = ({
                 key={item.id}
                 id={`tab-btn-${item.id}`}
                 onClick={() => onTabChange(item.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   activeTab === item.id
                     ? 'bg-white dark:bg-slate-900 text-red-600 dark:text-rose-400 shadow-xs'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                {item.label}
+                {item.isLive && (
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                )}
+                <span>{item.label}</span>
               </button>
             ))}
 

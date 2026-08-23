@@ -28,16 +28,16 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const mainNavItems = [
     { id: 'calendar', labelNepali: 'पात्रो', icon: <Calendar className="w-5 h-5" /> },
     { id: 'panchang', labelNepali: 'पञ्चाङ्ग', icon: <Compass className="w-5 h-5" /> },
+    { id: 'news', labelNepali: 'समाचार', icon: <Newspaper className="w-5 h-5" />, isLive: true },
     { id: 'rashifal', labelNepali: 'राशिफल', icon: <Star className="w-5 h-5" /> },
-    { id: 'converter', labelNepali: 'रूपान्तरण', icon: <ArrowLeftRight className="w-5 h-5" /> },
     { id: 'forex', labelNepali: 'मुद्रा/सुन', icon: <Coins className="w-5 h-5" /> },
   ];
 
   const moreItems = [
+    { id: 'converter', labelNepali: 'मिति रूपान्तरण (Date Converter)', icon: <ArrowLeftRight className="w-5 h-5 text-blue-500" /> },
     { id: 'festivals', labelNepali: 'चाडपर्व तथा बिदा', icon: <Sparkles className="w-5 h-5 text-amber-500" /> },
     { id: 'radio', labelNepali: 'नेपाली प्रत्यक्ष रेडियो', icon: <Radio className="w-5 h-5 text-purple-500" /> },
     { id: 'muhurat', labelNepali: 'शुभ साइत तथा मुहूर्त', icon: <Heart className="w-5 h-5 text-rose-500" /> },
-    { id: 'news', labelNepali: 'ताजा समाचार', icon: <Newspaper className="w-5 h-5 text-blue-500" /> },
     { id: 'events', labelNepali: 'व्यक्तिगत घटना', icon: <CalendarCheck className="w-5 h-5 text-emerald-500" /> },
     { id: 'wall_calendar', labelNepali: 'भित्ते पात्रो प्रिन्ट', icon: <Printer className="w-5 h-5 text-red-500" /> },
   ];
@@ -61,8 +61,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                     : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <div className={`p-1 rounded-lg ${isActive ? 'bg-red-50 dark:bg-red-950/60' : ''}`}>
+                <div className={`relative p-1 rounded-lg ${isActive ? 'bg-red-50 dark:bg-red-950/60' : ''}`}>
                   {item.icon}
+                  {item.isLive && (
+                    <span className="absolute top-0.5 right-0.5 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                  )}
                 </div>
                 <span className="text-[10px] leading-tight mt-0.5 font-['Mukta',sans-serif]">
                   {item.labelNepali}
