@@ -139,7 +139,7 @@ async function updateLiveNewsFeed(): Promise<NewsArticle[]> {
         return {
           id: `live-${source.id}-${Date.now()}-${idx}`,
           title,
-          source: source.name.split(' ')[0],
+          source: source.nameNepali || source.name.split(' ')[0],
           category,
           publishedAt: relativeTime,
           summary,

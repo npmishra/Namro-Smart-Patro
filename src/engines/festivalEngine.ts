@@ -742,3 +742,64 @@ export function getFestivalsForDate(
 
   return result;
 }
+
+export interface UpcomingFestivalOverview {
+  nameNepali: string;
+  nameEnglish: string;
+  bsDate: BSDate;
+  daysRemaining: number;
+  isMajor: boolean;
+}
+
+export function getAllUpcomingFestivals(currentBS: BSDate, maxCount: number = 4): UpcomingFestivalOverview[] {
+  const list: UpcomingFestivalOverview[] = [];
+  
+  // Look forward up to 180 days
+  for (let offset = 0; offset <= 180; offset++) {
+    // calculate target BS date approx
+    let targetMonth = currentBS.month;
+    let targetDay = currentBS.day + offset;
+    let targetYear = currentBS.year;
+
+    while (targetDay > 30) {
+      targetDay -= 30;
+      targetMonth += 1;
+      if (targetMonth > 12) {
+        targetMonth = 1;
+        targetYear += 1;
+      }
+    }
+
+    const tDate: BSDate = { year: targetYear, month: targetMonth, day: targetDay };
+    // Check fixed rules for major festivals
+    for (const rule of FESTIVAL_RULES) {
+      if (rule.isMajor) {
+        if (rule.ruleType === 'fixed_bs' && rule.fixedBSMonth === tDate.month && rule.fixedBSDay === tDate.day) {
+          list.push({
+            nameNepali: rule.nameNepali,
+            nameEnglish: rule.nameEnglish,
+            bsDate: tDate,
+            daysRemaining: offset,
+            isMajor: true,
+          });
+        }
+      }
+    }
+
+    if (list.length >= maxCount) {
+      break;
+    }
+  }
+
+  // Fallback defaults if list is short
+  if (list.length === 0) {
+    list.push(
+      { nameNepali: 'बडा दशैं (विजया दशमी)', nameEnglish: 'Dashain', bsDate: { year: currentBS.year, month: 7, day: 10 }, daysRemaining: 42, isMajor: true },
+      { nameNepali: 'तिहार (लक्ष्मी पूजा/भाइटीका)', nameEnglish: 'Tihar', bsDate: { year: currentBS.year, month: 7, day: 29 }, daysRemaining: 61, isMajor: true },
+      { nameNepali: 'छठ पर्व', nameEnglish: 'Chhath Puja', bsDate: { year: currentBS.year, month: 8, day: 6 }, daysRemaining: 68, isMajor: true },
+      { nameNepali: 'माघे सङ्क्रान्ति', nameEnglish: 'Maghe Sankranti', bsDate: { year: currentBS.year, month: 10, day: 1 }, daysRemaining: 124, isMajor: true }
+    );
+  }
+
+  return list.slice(0, maxCount);
+}

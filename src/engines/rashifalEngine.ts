@@ -190,3 +190,23 @@ export function getDailyRashifal(bsDate: BSDate): RashiDailyForecast[] {
     };
   });
 }
+
+/**
+ * Get daily rashifal forecast for a single rashi by id
+ */
+export function getDailyForecastForRashi(rashiId: string, bsDate: BSDate): RashiDailyForecast {
+  const rashi = RASHI_DATA.find((r) => r.id === rashiId) || RASHI_DATA[0];
+  const p = DAILY_PREDICTIONS[rashi.id] || DAILY_PREDICTIONS['aries'];
+  return {
+    ...rashi,
+    forecastNepali: p.forecast,
+    healthForecastNepali: p.health,
+    financeForecastNepali: p.finance,
+    loveForecastNepali: p.love,
+    luckyNumber: p.number,
+    luckyColorNepali: p.color,
+    luckyColorHex: p.colorHex,
+    luckyDirectionNepali: p.direction,
+    ratingStars: p.stars,
+  };
+}

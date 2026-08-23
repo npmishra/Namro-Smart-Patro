@@ -1,6 +1,6 @@
 import React from 'react';
-import { Printer, ArrowLeft, Download, Sparkles } from 'lucide-react';
-import { BSDate, LocationData } from '../types';
+import { Printer, ArrowLeft, Download, Sparkles, Building2, Phone, Mail, MapPin } from 'lucide-react';
+import { BSDate, LocationData, CompanyProfile } from '../types';
 import {
   formatBSDateNepali,
   getDaysInBSMonth,
@@ -14,6 +14,7 @@ interface PrintableWallCalendarProps {
   month: number;
   location: LocationData;
   onClose: () => void;
+  companyProfile?: CompanyProfile;
 }
 
 export const PrintableWallCalendar: React.FC<PrintableWallCalendarProps> = ({
@@ -21,6 +22,7 @@ export const PrintableWallCalendar: React.FC<PrintableWallCalendarProps> = ({
   month,
   location,
   onClose,
+  companyProfile,
 }) => {
   const days = getMonthlyCalendarDays(year, month, location, 'drik');
   const monthInfo = NEPALI_MONTHS.find((m) => m.id === month) || NEPALI_MONTHS[0];

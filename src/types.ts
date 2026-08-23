@@ -242,3 +242,97 @@ export interface VerificationTestResult {
   tolerance: string;
   passed: boolean;
 }
+
+export interface CompanyProfile {
+  companyNameNepali: string;
+  companyNameEnglish: string;
+  taglineNepali: string;
+  taglineEnglish: string;
+  shortCode: string;
+
+  // Contact info
+  phonePrimary: string;
+  phoneSecondary: string;
+  tollFreeNumber: string;
+  emailPrimary: string;
+  emailSupport: string;
+
+  // Address info
+  addressLine1Nepali: string;
+  addressLine1English: string;
+  districtNepali: string;
+  provinceNepali: string;
+  countryNepali: string;
+  postalCode: string;
+
+  // Legal & Registration
+  panNumber: string;
+  registrationNumber: string;
+  copyrightNoticeNepali: string;
+
+  // Web & Social
+  websiteUrl: string;
+  facebookUrl: string;
+  youtubeUrl: string;
+  twitterUrl: string;
+  whatsAppNumber: string;
+
+  // Branding & Visual
+  brandAccentColor: string;
+  customLogoUrl?: string;
+  customLogoEmoji?: string;
+  displayOrganizationBadge: boolean;
+}
+
+export type AdminRole = 'admin' | 'user' | 'kiosk';
+
+export interface AdminVisibilityConfig {
+  version: number;
+  lastUpdated: string;
+  role: AdminRole;
+  adminPin: string;
+  isPinRequired: boolean;
+  companyProfile: CompanyProfile;
+  showTopMarketWeatherBar: boolean;
+  showHeaderSearch: boolean;
+  showHeaderLocation: boolean;
+  showHeaderCalculationMethod: boolean;
+  showHeaderThemeToggle: boolean;
+  showHeaderAdminButton: boolean;
+  showBreakingNewsTicker: boolean;
+  showQuickServicesHub: boolean;
+  showFloatingRadioPlayer: boolean;
+  showBottomNavigation: boolean;
+  showFooter: boolean;
+  showDateHeroCard: boolean;
+  showFestivalCountdownWidget: boolean;
+  showCalendarMonthView: boolean;
+  showDailyPanchangSidebar: boolean;
+  showHomeDashboardWidgets: boolean;
+  showHomeNewsWidget: boolean;
+  showPanchangTithiBadges: boolean;
+  showPanchangAstronomyTimings: boolean;
+  showPanchangKaalDurmuhurat: boolean;
+  enabledTabs: {
+    calendar: boolean;
+    panchang: boolean;
+    news: boolean;
+    rashifal: boolean;
+    forex: boolean;
+    radio: boolean;
+    converter: boolean;
+    muhurat: boolean;
+    festivals: boolean;
+    wall_calendar: boolean;
+    events: boolean;
+  };
+  announcement: {
+    enabled: boolean;
+    textNepali: string;
+    type: 'info' | 'alert' | 'festival' | 'celebration' | 'maintenance';
+    actionText?: string;
+    actionUrl?: string;
+  };
+  activePreset: 'custom' | 'full_portal' | 'minimal_patro' | 'media_focus' | 'vedic_astrology' | 'kiosk_display';
+}
+

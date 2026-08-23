@@ -190,10 +190,10 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             <div
               key={w.id}
               className={`py-2.5 sm:py-3 ${
-                isSat ? 'text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-950/20' : 'text-slate-700 dark:text-slate-300'
+                isSat ? 'text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-950/20 font-black' : 'text-slate-700 dark:text-slate-300'
               }`}
             >
-              <div className="font-extrabold">{w.nameNepali}</div>
+              <div className="font-black text-sm">{w.nameNepali}</div>
               <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
                 {w.shortEnglish}
               </div>
@@ -208,7 +208,7 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
         {Array.from({ length: startingEmptyCells }).map((_, idx) => (
           <div
             key={`empty-${idx}`}
-            className="bg-slate-50/40 dark:bg-slate-900/40 min-h-[75px] sm:min-h-[105px] p-1.5 opacity-30 select-none"
+            className="bg-slate-50/40 dark:bg-slate-900/40 min-h-[85px] sm:min-h-[115px] p-1.5 opacity-30 select-none"
           />
         ))}
 
@@ -225,19 +225,22 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             todayDate.day === dayItem.bsDate.day;
 
           const isSaturday = dayItem.weekday === 6;
+          const isPurnima = dayItem.tithiNumber === 15;
+          const isAmavasya = dayItem.tithiNumber === 30;
+          const isEkadashi = dayItem.tithiNumber === 11 || dayItem.tithiNumber === 26;
 
           return (
             <div
               key={`day-${dayItem.bsDate.day}`}
               id={`cal-cell-${dayItem.bsDate.year}-${dayItem.bsDate.month}-${dayItem.bsDate.day}`}
               onClick={() => onSelectDate(dayItem.bsDate)}
-              className={`group relative bg-white dark:bg-slate-900 min-h-[80px] sm:min-h-[110px] p-1.5 sm:p-2 cursor-pointer transition-all flex flex-col justify-between select-none ${
+              className={`group relative bg-white dark:bg-slate-900 min-h-[85px] sm:min-h-[115px] p-1.5 sm:p-2 cursor-pointer transition-all flex flex-col justify-between select-none ${
                 isSelected
-                  ? 'ring-2 ring-inset ring-red-600 dark:ring-rose-500 bg-red-50/30 dark:bg-red-950/20 z-10'
+                  ? 'ring-2 ring-inset ring-red-600 dark:ring-rose-500 bg-red-50/40 dark:bg-red-950/30 z-10'
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'
-              } ${isSaturday ? 'bg-rose-50/20 dark:bg-rose-950/10' : ''}`}
+              } ${isSaturday ? 'bg-rose-50/25 dark:bg-rose-950/15' : ''}`}
             >
-              {/* Top row: BS Date, AD Date, and Today badge */}
+              {/* Top row: BS Date, AD Date, and Special Tithi Glyphs */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-1">
                   <span
@@ -245,12 +248,22 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                       isToday
                         ? 'w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xs'
                         : isSaturday || dayItem.hasHoliday
-                        ? 'text-red-600 dark:text-red-400'
+                        ? 'text-red-600 dark:text-red-400 font-black'
                         : 'text-slate-900 dark:text-slate-100'
                     }`}
                   >
                     {toNepaliDigits(dayItem.bsDate.day)}
                   </span>
+                  
+                  {isPurnima && (
+                    <span className="text-[10px]" title="पूर्णिमा (Full Moon)">🌕</span>
+                  )}
+                  {isAmavasya && (
+                    <span className="text-[10px]" title="औंसी (New Moon)">🌑</span>
+                  )}
+                  {isEkadashi && (
+                    <span className="text-[10px] text-emerald-600 font-bold" title="एकादशी व्रत">🌿</span>
+                  )}
                 </div>
 
                 <span className="text-[10px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500">
@@ -262,8 +275,8 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
               <div className="mt-1">
                 <span
                   className={`text-[10px] sm:text-[11px] block truncate font-medium ${
-                    dayItem.tithiNumber === 15 || dayItem.tithiNumber === 30 || dayItem.tithiNumber === 11 || dayItem.tithiNumber === 26
-                      ? 'text-amber-700 dark:text-amber-400 font-bold'
+                    isPurnima || isAmavasya || isEkadashi
+                      ? 'text-amber-700 dark:text-amber-400 font-black'
                       : 'text-slate-500 dark:text-slate-400'
                   }`}
                   title={dayItem.tithiNameNepali}
@@ -276,20 +289,20 @@ export const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
               <div className="mt-1 space-y-0.5">
                 {dayItem.hasFestival && (
                   <div
-                    className="px-1 py-0.5 rounded text-[9px] sm:text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 truncate flex items-center gap-0.5 shadow-2xs border border-amber-200/60 dark:border-amber-800/40"
+                    className="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 truncate flex items-center gap-1 shadow-2xs border border-amber-200/60 dark:border-amber-800/40"
                     title={dayItem.festivalTitle}
                   >
-                    <span className="shrink-0">🎉</span>
+                    <span className="shrink-0 text-[10px]">🎉</span>
                     <span className="truncate">{dayItem.festivalTitle}</span>
                   </div>
                 )}
 
                 {dayItem.hasHoliday && !dayItem.isSaturday && (
                   <div
-                    className="px-1 py-0.5 rounded text-[9px] sm:text-[10px] font-bold bg-red-100 dark:bg-red-950/80 text-red-800 dark:text-red-200 truncate flex items-center gap-0.5 border border-red-200/60 dark:border-red-800/40"
+                    className="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold bg-red-100 dark:bg-red-950/80 text-red-800 dark:text-red-200 truncate flex items-center gap-1 border border-red-200/60 dark:border-red-800/40"
                     title={dayItem.holidayTitle}
                   >
-                    <span className="shrink-0">🚩</span>
+                    <span className="shrink-0 text-[10px]">🚩</span>
                     <span className="truncate">{dayItem.holidayTitle}</span>
                   </div>
                 )}
